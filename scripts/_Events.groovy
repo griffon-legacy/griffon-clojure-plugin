@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010 the original author or authors.
+ * Copyright 2009-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,21 +18,7 @@
  * @author Andres Almiray
  */
 
-includeTargets << griffonScript("Init")
-includePluginScript("clojure", "_ClojureCommon")
-
-def eventClosure1 = binding.variables.containsKey('eventSetClasspath') ? eventSetClasspath : {cl->}
-eventSetClasspath = { cl ->
-    eventClosure1(cl)
-    if(compilingPlugin('clojure')) return
-    griffonSettings.dependencyManager.flatDirResolver name: 'griffon-clojure-plugin', dirs: "${clojurePluginDir}/addon"
-    griffonSettings.dependencyManager.addPluginDependency('clojure', [
-        conf: 'compile',
-        name: 'griffon-clojure-addon',
-        group: 'org.codehaus.griffon.plugins',
-        version: clojurePluginVersion
-    ])
-}
+includePluginScript('clojure', '_ClojureCommon')
 
 eventCompileStart = {
     if(compilingPlugin('clojure')) return
@@ -40,13 +26,13 @@ eventCompileStart = {
 }
 
 eventStatsStart = { pathToInfo ->
-    if(!pathToInfo.find{ it.path == "src.commons"} ) {
-        pathToInfo << [name: "Common Sources", path: "src.commons", filetype: [".groovy",".java"]]
+    if(!pathToInfo.find{ it.path == 'src.commons'} ) {
+        pathToInfo << [name: 'Common Sources', path: 'src.commons', filetype: ['.groovy','.java']]
     }
     // TODO -- match multiline comments -> (comment ...)
-    if(!pathToInfo.find{ it.path == "src.clojure"} ) {
+    if(!pathToInfo.find{ it.path == 'src.clojure'} ) {
         def EMPTY = /^\s*$/
-        pathToInfo << [name: "Clojure Sources", path: "src.clojure", filetype: [".clj"], locmatcher: {file ->
+        pathToInfo << [name: 'Clojure Sources', path: 'src.clojure', filetype: ['.clj'], locmatcher: {file ->
             def loc = 0
             file.eachLine { line ->
                 if(line ==~ EMPTY || line ==~ /^\s*\;.*/) return

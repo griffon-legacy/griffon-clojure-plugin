@@ -2,21 +2,16 @@ griffon.project.dependency.resolution = {
     inherits "global"
     log "warn"
     repositories {
-        griffonPlugins()
         griffonHome()
-        griffonCentral()
         mavenCentral()
         mavenRepo 'http://repository.sonatype.org/content/groups/public'
         mavenRepo 'http://repository.springsource.com/maven/bundles/release'
     }
     dependencies {
         def clojureVersion = '1.3.0'
-        build "org.clojure:clojure:$clojureVersion",
-              "jline:jline:0.9.94",
-              "org.fusesource.jansi:jansi:1.4"
+        build "org.clojure:clojure:$clojureVersion"
         compile "org.clojure:clojure:$clojureVersion"
 
-        def springVersion = '3.0.5.RELEASE'
         compile("org.springframework:org.springframework.core:$springVersion") {
             transitive = false
         }
@@ -31,4 +26,16 @@ griffon {
     }
 }
 
-griffon.jars.destDir='target/addon'
+log4j = {
+    // Example of changing the log pattern for the default console
+    // appender:
+    appenders {
+        console name: 'stdout', layout: pattern(conversionPattern: '%d [%t] %-5p %c - %m%n')
+    }
+
+    error 'org.codehaus.griffon',
+          'org.springframework',
+          'org.apache.karaf',
+          'groovyx.net'
+    warn  'griffon'
+}

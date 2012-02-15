@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010 the original author or authors.
+ * Copyright 2009-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,9 +18,7 @@
  * @author Andres Almiray
  */
 
-import org.codehaus.groovy.runtime.StackTraceUtils
-
-includeTargets << griffonScript('_GriffonArgParsing')
+import griffon.util.GriffonExceptionHandler
 
 target(name: 'compileClojureSrc', description: "", prehook: null, posthook: null) {
     depends(parseArguments)
@@ -36,22 +34,21 @@ target(name: 'compileClojureSrc', description: "", prehook: null, posthook: null
         return
     }
 
-    if(sourcesUpToDate("${basedir}/src/clojure", classesDirPath, ".clj")) return
+    if(sourcesUpToDate("${basedir}/src/clojure", projectMainClassesDir, ".clj")) return
 
-    ant.echo(message: "[clojure] Compiling Clojure sources to $classesDirPath")
-    ant.mkdir(dir: classesDirPath)
+    ant.echo(message: "[clojure] Compiling Clojure sources to $projectMainClassesDir")
+    ant.mkdir(dir: projectMainClassesDir)
     try {
         convertNamespacePath(clojureSrc, "clojure.compile.namespaces")
-        defineClojureCompilePath(clojureSrc, classesDirPath)
+        defineClojureCompilePath(clojureSrc, projectMainClassesDir)
         ant.java(classname: "clojure.lang.Compile",
                  classpathref: "clojure.compile.classpath") {
-            sysproperty(key: "clojure.compile.path", value: classesDirPath)
+            sysproperty(key: "clojure.compile.path", value: projectMainClassesDir)
             arg(line: ant.antProject.properties."clojure.compile.namespaces")
         }
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
         if(argsMap.verboseCompile) {
-            StackTraceUtils.deepSanitize(e)
+            GriffonExceptionHandler.sanitize(e)
             e.printStackTrace(System.err)
         }
         event("StatusFinal", ["Compilation error: ${e.message}"])
@@ -84,7 +81,7 @@ target(compileClojureTest: "") {
         }
     } catch (Exception e) {
         if(argsMap.verboseCompile) {
-            StackTraceUtils.deepSanitize(e)
+            GriffonExceptionHandler.sanitize(e)
             e.printStackTrace(System.err)
         }
         event("StatusFinal", ["Compilation error: ${e.message}"])

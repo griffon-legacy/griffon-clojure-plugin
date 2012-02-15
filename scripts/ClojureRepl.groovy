@@ -24,7 +24,7 @@ includePluginScript("clojure", "_ClojureCommon")
 target(clojureRepl: "Run Clojure REPL") {
     depends(checkVersion, configureProxy, classpath, packageApp)
 
-    addUrlIfNotPresent classLoader.parent, classesDir
+    addUrlIfNotPresent classLoader.parent, projectMainClassesDir
     addUrlIfNotPresent classLoader.parent, resourcesDir
 
     // classLoader.loadClass("clojure.lang.Repl").main([] as String[])
