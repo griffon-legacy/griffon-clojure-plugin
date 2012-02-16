@@ -20,11 +20,10 @@
 
 import griffon.util.GriffonExceptionHandler
 
-target(name: 'compileClojureSrc', description: "", prehook: null, posthook: null) {
-    depends(parseArguments)
+includePluginScript('lang-bridge', '_Commons')
 
-    includePluginScript('lang-bridge', 'CompileCommons')
-    compileCommons()
+target(name: 'compileClojureSrc', description: "", prehook: null, posthook: null) {
+    depends(parseArguments, compileCommons)
 
     def clojureSrc = "${basedir}/src/clojure"
     def clojureSrcDir = new File(clojureSrc)
@@ -47,7 +46,7 @@ target(name: 'compileClojureSrc', description: "", prehook: null, posthook: null
             arg(line: ant.antProject.properties."clojure.compile.namespaces")
         }
     } catch (Exception e) {
-        if(argsMap.verboseCompile) {
+        if(argsMap.compileTrace) {
             GriffonExceptionHandler.sanitize(e)
             e.printStackTrace(System.err)
         }
@@ -80,7 +79,7 @@ target(compileClojureTest: "") {
             arg(line: ant.antProject.properties."clojure.test.namespaces")
         }
     } catch (Exception e) {
-        if(argsMap.verboseCompile) {
+        if(argsMap.compileTrace) {
             GriffonExceptionHandler.sanitize(e)
             e.printStackTrace(System.err)
         }
@@ -95,6 +94,13 @@ defineClojureCompilePath = { srcdir, destdir ->
         pathElement(location: destdir)
         pathElement(location: srcdir)
     }
+
+    if (argsMap.compileTrace) {
+        println('-' * 80)
+        println "[GRIFFON] 'clojure.compile.classpath' entries"
+        ant.project.getReference('clojure.compile.classpath').list().each {println("  $it")}
+        println('-' * 80)
+    }
 }
 
 defineClojureTestPath = { srcdir, destdir ->
@@ -102,6 +108,13 @@ defineClojureTestPath = { srcdir, destdir ->
         path(refid: "clojure.compile.classpath")
         pathElement(location: destdir)
         pathElement(location: srcdir)
+    }
+
+    if (argsMap.compileTrace) {
+        println('-' * 80)
+        println "[GRIFFON] 'clojure.test.classpath' entries"
+        ant.project.getReference('clojure.test.classpath').list().each {println("  $it")}
+        println('-' * 80)
     }
 }
 
