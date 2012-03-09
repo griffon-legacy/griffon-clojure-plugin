@@ -28,7 +28,6 @@ import griffon.util.GriffonUtil
 includeTargets << griffonScript("CreateIntegrationTest")
 
 target('createClojureClass': "Creates a new Clojure script") {
-    depends(checkVersion, parseArguments)
     promptForName(type: "Class")
     def (pkg, name) = extractArtifactName(argsMap["params"][0])
     if(!pkg) pkg = "griffon"

@@ -22,7 +22,7 @@ includeTargets << griffonScript("_GriffonPackage")
 includePluginScript("clojure", "_ClojureCommon")
 
 target(clojureRepl: "Run Clojure REPL") {
-    depends(checkVersion, configureProxy, classpath, packageApp)
+    depends(classpath, packageApp)
 
     addUrlIfNotPresent classLoader.parent, projectMainClassesDir
     addUrlIfNotPresent classLoader.parent, resourcesDir

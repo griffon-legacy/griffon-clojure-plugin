@@ -25,8 +25,6 @@
 includeTargets << griffonScript("CreateIntegrationTest")
 
 target('createClojureScript': "Creates a new Clojure script") {
-    depends(parseArguments)
-
     promptForName(type: 'Script')
 
     def name = argsMap["params"][0]

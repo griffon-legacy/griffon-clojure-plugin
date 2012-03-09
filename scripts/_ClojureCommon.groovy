@@ -23,7 +23,7 @@ import griffon.util.GriffonExceptionHandler
 includePluginScript('lang-bridge', '_Commons')
 
 target(name: 'compileClojureSrc', description: "", prehook: null, posthook: null) {
-    depends(parseArguments, compileCommons)
+    depends(compileCommons)
 
     def clojureSrc = "${basedir}/src/clojure"
     def clojureSrcDir = new File(clojureSrc)
