@@ -34,7 +34,7 @@ class ClojureGriffonAddon {
       }
    }
 
-   def events = [
+   Map events = [
       BootstrapStart: { app ->
           loadSources(app, 'classpath*:/clj/**/*.clj')
       },

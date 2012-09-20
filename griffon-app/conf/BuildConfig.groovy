@@ -8,7 +8,7 @@ griffon.project.dependency.resolution = {
         mavenRepo 'http://repository.springsource.com/maven/bundles/release'
     }
     dependencies {
-        def clojureVersion = '1.3.0'
+        def clojureVersion = '1.4.0'
         build "org.clojure:clojure:$clojureVersion"
         compile "org.clojure:clojure:$clojureVersion"
 
